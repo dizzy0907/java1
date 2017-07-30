@@ -23,7 +23,9 @@ public class DBCon {
 		try {
 			Class.forName(driver);  //현재  Class를 사용시 driver를 사용하겠다라는 의미
 			dbConnecte();
-		}catch(Exception e){
+		}catch(ClassNotFoundException e){
+			e.printStackTrace();
+		}catch(SQLException e){
 			e.printStackTrace();
 		}
 	}
