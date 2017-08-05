@@ -12,12 +12,13 @@ import java.util.List;
 
 public class DBCon {
 	
+	private Connection con;
 	private String driver = "org.mariadb.jdbc.Driver";
 	private String url = "jdbc:mariadb://localhost:3306/study";
 	private String id = "root";
 	private String pwd = "gp02fu3369"; 
-	private Connection con;
-	private PreparedStatement ps;
+	
+	
 	
 	public DBCon() {
 		try {
@@ -26,34 +27,12 @@ public class DBCon {
 		}catch(ClassNotFoundException e){
 			e.printStackTrace();
 		}catch(SQLException e){
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 	}
 	
 	private void dbConnecte()  throws SQLException{
 		con = DriverManager.getConnection(url, id, pwd);
-	}
-	
-	public List<HashMap<String, String>> getListFromTable(String sql){
-		try {
-			ps = con.prepareStatement(sql);  //sql 실행하는 함수
-			ResultSet rs = ps.executeQuery();  //ResultSet에는 colum명인 metadata까지 가지고 있음, sql의 결과값을 적기 위해 		
-			ResultSetMetaData rsmd = rs.getMetaData();
-			int maxNum = rsmd.getColumnCount();
-			List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-			while (rs.next()) {
-				HashMap<String, String> hm = new HashMap<String, String>();
-				for(int i = 0; i <= maxNum; i++) {
-					String colName =  rsmd.getColumnLabel(i);
-					hm.put(colName, rs.getString(colName));
-				}
-				list.add(hm);
-			}
-			return list;
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 	public void printListFromTable(String sql){
@@ -64,6 +43,29 @@ public class DBCon {
 			 }
 		 }
 	}
+	
+	public List<HashMap<String, String>> getListFromTable(String sql){
+		PreparedStatement ps;
+		try {			
+			ps = con.prepareStatement(sql);  //sql 실행하는 함수
+			ResultSet rs = ps.executeQuery();  //ResultSet에는 colum명인 metadata까지 가지고 있음, sql의 결과값을 적기 위해 		
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int maxNum = rsmd.getColumnCount();
+			List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+			while (rs.next()) {
+				HashMap<String, String> hm = new HashMap<String, String>();
+				for(int i = 1; i <= maxNum; i++) {
+					String colName =  rsmd.getColumnLabel(i);
+					hm.put(colName, rs.getString(colName));
+				}
+				list.add(hm);
+			}
+			return list;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}	
 	
 	public static void main(String[] args) throws SQLException {
 		DBCon dbcon = new DBCon();
