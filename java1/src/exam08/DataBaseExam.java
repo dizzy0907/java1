@@ -34,8 +34,10 @@ public class DataBaseExam {
 			ResultSet rs = ps.executeQuery(sql);
 			List<UserInfo>list = new ArrayList<UserInfo>();
 			
+			
 			while(rs.next()) {
 				UserInfo ui = new UserInfo();
+				
 				ui.setUiNum(rs.getInt("uinum"));
 				ui.setUiName(rs.getString("uiname"));
 				ui.setUiAge(rs.getInt("uiage"));
@@ -46,7 +48,6 @@ public class DataBaseExam {
 			
 			for(UserInfo ui : list) {
 				System.out.println("번호" + ui.getUiNum());
-				System.out.println("이름" + ui.getUiName());
 			}
 			
 		}catch (Exception e) {
